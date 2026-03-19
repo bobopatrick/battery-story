@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>⚡ 電力小人的快遞之旅</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Comic Sans MS', 'Microsoft JhengHei', cursive;
+            margin: 0;
+            color: white;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .circuit {
+            position: relative;
+            width: 800px;
+            height: 400px;
+        }
+        
+        /* 電線 */
+        .wire {
+            position: absolute;
+            background: #555;
+            border-radius: 10px;
+        }
+        
+        .wire-top {
+            top: 150px;
+            left: 180px;
+            width: 440px;
+            height: 8px;
+        }
+        
+        .wire-bottom {
+            top: 250px;
+            left: 180px;
+            width: 440px;
+            height: 8px;
+        }
+        
+        .wire-left {
+            left: 170px;
+            top: 150px;
+            width: 8px;
+            height: 108px;
+        }
+        
+        .wire-right {
+            right: 170px;
+            top: 150px;
+            width: 8px;
+            height: 108px;
+        }
+        
+        /* 電池 */
+        .battery {
+            position: absolute;
+            left: 80px;
+            top: 120px;
+            width: 80px;
+            height: 160px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+            border-radius: 10px;
+            border: 3px solid #666;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .battery-cap {
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(135deg, #888 0%, #555 100%);
+            border-radius: 5px 5px 0 0;
+            margin-bottom: -3px;
+        }
+        
+        .battery-body {
+            width: 70px;
+            height: 130px;
+            background: linear-gradient(180deg, #3d5a3d 0%, #2d4a2d 50%, #1d3a1d 100%);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #90EE90;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .battery-body span {
+            font-size: 24px;
+        }
+        
+        /* 燈泡 */
+        .bulb {
+            position: absolute;
+            right: 60px;
+            top: 80px;
+            width: 100px;
+            height: 140px;
+            z-index: 10;
+            transition: filter 0.3s;
+        }
+        
+        .bulb.off {
+            filter: grayscale(100%) brightness(50%);
+        }
+        
+        .bulb.on {
+            filter: brightness(1.5) drop-shadow(0 0 30px yellow) drop-shadow(0 0 60px orange);
+        }
+        
+        .bulb-glass {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(ellipse at 30% 30%, #fff 0%, #ffe066 30%, #ffcc00 60%, #cc9900 100%);
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        
+        .bulb-base {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, #666 0%, #444 100%);
+            border-radius: 0 0 10px 10px;
+            margin: -5px auto 0;
+        }
+        
+        .bulb-base::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 8px;
+            background: #333;
+            margin: 5px auto;
+            border-radius: 2px;
+        }
+        
+        .bulb-base::after {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 8px;
+            background: #333;
+            margin: 3px auto;
+            border-radius: 2px;
+        }
+        
+        /* 電力小人 */
+        .electricity-person {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            z-index: 20;
+            transition: opacity 0.3s;
+        }
+        
+        .person-body {
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #00ffff, #0088ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            animation: pulse 1s infinite;
+        }
+        
+        .package {
+            position: absolute;
+            bottom: -10px;
+            right: -5px;
+            width: 20px;
+            height: 15px;
+            background: #ff6b6b;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-3px); }
+        }
+        
+        /* 說明框 */
+        .info-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            max-width: 700px;
+            text-align: center;
+        }
+        
+        .info-box h3 {
+            color: #ffd700;
+            margin: 0 0 10px 0;
+        }
+        
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        /* 標籤 */
+        .label {
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 0 10px black;
+        }
+        
+        .battery-label {
+            left: 60px;
+            top: 290px;
+        }
+        
+        .bulb-label {
+            right: 70px;
+            top: 230px;
+        }
+        
+        /* 動畫路徑 */
+        .path-top {
+            position: absolute;
+            top: 154px;
+            left: 180px;
+            width: 440px;
+            height: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚡ 電力小人的快遞之旅 ⚡</h1>
+    
+    <div class="circuit">
+        <!-- 電線 -->
+        <div class="wire wire-top"></div>
+        <div class="wire wire-bottom"></div>
+        <div class="wire wire-left"></div>
+        <div class="wire wire-right"></div>
+        
+        <!-- 電池 -->
+        <div class="battery">
+            <div class="battery-cap"></div>
+            <div class="battery-body">
+                <span>🔋</span>
+                電池<br>工廠
+            </div>
+        </div>
+        
+        <!-- 燈泡 -->
+        <div class="bulb off" id="bulb">
+            <div class="bulb-glass"></div>
+            <div class="bulb-base"></div>
+        </div>
+        
+        <!-- 標籤 -->
+        <div class="label battery-label">🔋 電池工廠</div>
+        <div class="label bulb-label">💡 燈泡城</div>
+        
+        <!-- 電力小人會由 JS 動態生成 -->
+    </div>
+    
+    <div class="info-box">
+        <h3>📖 故事說明</h3>
+        <p><strong>電壓</strong> = 推動電力小人前進的力量 | <strong>電子</strong> = 電力小人搬運的包裹</p>
+        <p><strong>電流</strong> = 電力小人排成一列向前跑的樣子 | <strong>發光</strong> = 電子包裹到達燈泡時釋放能量</p>
+    </div>
+    
+    <script>
+        // 創建多個電力小人
+        const numPeople = 6;
+        const pathTop = []; // 上方路徑
+        const pathBottom = []; // 下方路徑
+        
+        // 計算路徑點
+        const startX = 180;
+        const endX = 580;
+        const topY = 154;
+        const bottomY = 254;
+        
+        // 生成電力小人
+        for (let i = 0; i < numPeople; i++) {
+            createElectricityPerson(i);
+        }
+        
+        function createElectricityPerson(index) {
+            const person = document.createElement('div');
+            person.className = 'electricity-person';
+            person.innerHTML = `
+                <div class="person-body">⚡</div>
+                <div class="package">📦</div>
+            `;
+            person.style.opacity = '0';
+            document.querySelector('.circuit').appendChild(person);
+            
+            // 計算動畫參數
+            const delay = index * 800; // 每個小人延遲出發
+            const duration = 4000; // 跑完一圈需要4秒
+            
+            // 動畫
+            animatePerson(person, delay, duration, index);
+        }
+        
+        function animatePerson(person, delay, duration, index) {
+            let startTime = null;
+            
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime - delay;
+                
+                if (elapsed < 0) {
+                    // 還沒輪到出發
+                    requestAnimationFrame(animate);
+                    return;
+                }
+                
+                const cycleTime = elapsed % duration;
+                const progress = cycleTime / duration;
+                
+                // 路徑：電池上方 -> 燈泡上方 -> 燈泡下方 -> 電池下方 -> 回到電池
+                let x, y;
+                
+                if (progress < 0.25) {
+                    // 從電池到燈泡 (上方)
+                    x = startX + (endX - startX) * (progress / 0.25);
+                    y = topY;
+                } else if (progress < 0.3) {
+                    // 穿過燈泡
+                    x = endX;
+                    y = topY + (bottomY - topY) * ((progress - 0.25) / 0.05);
+                } else if (progress < 0.55) {
+                    // 從燈泡回到電池 (下方)
+                    x = endX - (endX - startX) * ((progress - 0.3) / 0.25);
+                    y = bottomY;
+                } else if (progress < 0.6) {
+                    // 穿過電池
+                    x = startX;
+                    y = bottomY - (bottomY - topY) * ((progress - 0.55) / 0.05);
+                } else {
+                    // 準備下一次循環（在電池內）
+                    x = startX;
+                    y = topY + (bottomY - topY) * ((progress - 0.6) / 0.4);
+                }
+                
+                // 檢查是否到達燈泡（發光位置）
+                if (progress > 0.25 && progress < 0.35) {
+                    // 讓燈泡發光
+                    document.getElementById('bulb').classList.remove('off');
+                    document.getElementById('bulb').classList.add('on');
+                } else {
+                    // 關閉燈泡
+                    document.getElementById('bulb').classList.remove('on');
+                    document.getElementById('bulb').classList.add('off');
+                }
+                
+                // 設定位置
+                person.style.left = x + 'px';
+                person.style.top = y + 'px';
+                
+                // 顯示/隱藏
+                if (progress > 0.6) {
+                    person.style.opacity = (1 - (progress - 0.6) / 0.4);
+                } else {
+                    person.style.opacity = '1';
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 標題動畫
+        let hue = 0;
+        setInterval(() => {
+            hue = (hue + 1) % 360;
+            document.querySelector('h1').style.textShadow = `0 0 20px hsl(${hue}, 100%, 50%)`;
+        }, 100);
+    </script>
+</body>
+</html>
